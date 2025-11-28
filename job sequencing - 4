@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Job {
+    int id;
+    int deadline;
+    int profit;
+};
+
+class Solution {
+public:
+    vector<int> JobScheduling(Job arr[], int n) {
+
+        // Step 1: Sort by profit (descending)
+        sort(arr, arr + n, [](Job &a, Job &b){
+            return a.profit > b.profit;
+        });
+
+        // Find max deadline
+        int maxD = 0;
+        for (int i = 0; i < n; i++) {
+            maxD = max(maxD, arr[i].deadline);
+        }
+
+        // Time slots
+        vector<int> slot(maxD + 1, -1);
+
+        int jobCount = 0;
+        int totalProfit = 0;
+
+        // Step 3: Schedule each job
+        for (int i = 0; i < n; i++) {
+            for (int t = arr[i].deadline; t > 0; t--) {
+                if (slot[t] == -1) {
+                    slot[t] = arr[i].id;
+                    jobCount++;
+                    totalProfit += arr[i].profit;
+                    break;
+                }
+            }
+        }
+
+        return {jobCount, totalProfit};
+    }
+};
